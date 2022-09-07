@@ -1,25 +1,100 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React, { useState, useReducer } from "react";
+import uuid from "react-uuid";
+import "./App.css";
+const initialState = {
+  lastNoteCreated: null,
+  noteCount: 0,
+  notes: [],
+};
+const noteReducer = (prevState, action) => {
+  switch (action.type) {
+    case "ADD_NOTE":
+      const newState = {
+        lastNoteCreated: new Date().toTimeString().slice(0, 8),
+        noteCount: prevState.notes.length + 1,
+        notes: [...prevState.notes, action.payload],
+      };
+      return newState;
+    case "DELETE_NOTE": {
+      const newState = {
+        ...prevState,
+        noteCount: prevState.notes.length - 1,
+        notes: prevState.notes.filter((note) => note.id !== action.payload.id),
+      };
+      console.log("After DELETE_NOTE: ", newState);
+      return newState;
+    }
+    default:
+      console.log("helllo");
+  }
+};
+export default function App() {
+  const [inputData, setInputData] = useState("");
+  const [listNotes, dispatch] = useReducer(noteReducer, initialState);
+  const addNote = (e) => {
+    e.preventDefault();
+    if (!inputData) {
+      return;
+    }
+    const newNote = {
+      id: uuid(),
+      text: inputData,
+      rotate: Math.floor(Math.random() * 20),
+    };
+    dispatch({ type: "ADD_NOTE", payload: newNote });
+    setInputData("");
+  };
+  const dragNote = (e) => {
+    e.target.style.left = `${e.pageX - 50}px`;
+    e.target.style.top = `${e.pageY - 50}px`;
+  };
+  const dragApp = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app' onDragOver={dragApp}>
+      <h1>
+        Sticky Notes ({listNotes.noteCount})
+        <span>
+          {listNotes.noteCount > 0
+            ? `Last Not Created ${listNotes.lastNoteCreated}`
+            : ""}
+        </span>
+      </h1>
+      <form onSubmit={addNote} className='note-form'>
+        <textarea
+          value={inputData}
+          onChange={(e) => setInputData(e.target.value)}
+          placeholder='Create a new note.....'></textarea>
+        <button type='submit'>Add</button>
+      </form>
+      {listNotes.notes.map((note, index) => {
+        return (
+          <div
+            className='note'
+            style={{ transform: `rotate(${note.rotate}deg)` }}
+            draggable='true'
+            onDragEnd={dragNote}
+            key={note.id}>
+            <div
+              onClick={() => dispatch({ type: "DELETE_NOTE", payload: note })}
+              className='close'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'>
+                <path
+                  fillRule='evenodd'
+                  d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+                  clipRule='evenodd'
+                />
+              </svg>
+            </div>
+            <pre className='text'>{note.text}</pre>
+          </div>
+        );
+      })}
     </div>
   );
 }
-
-export default App;

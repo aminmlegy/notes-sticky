@@ -1,38 +1,66 @@
-.App {
-  text-align: center;
+.app {
+  padding: 50px;
+  height: 100vh;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 span {
+  display: block;
+  font-size: 14px;
+  font-style: italic;
+  height: 14px;
+  margin-bottom: 5px;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.note-form {
   display: flex;
+  width: 200px;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+.note-form textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
+  border: 1px solid lightgrey;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100px;
+  padding: 10px;
+}
+button {
+  width: 100%;
+  background-color: #fff27f;
+  cursor: pointer;
+  padding: 10px;
+  border: 0;
+  outline: none;
+}
+button:hover {
+  background-color: tomato;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.note {
+  position: absolute;
+  cursor: pointer;
+  background-image: url("assets/post-it-note.png");
+  background-size: cover;
+  top: 100px;
+  left: 300px;
+  height: 200px;
+  width: 200px;
+  padding: 20px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text {
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.close {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 15px;
+  transition: transform 0.3s ease;
+}
+.close:hover {
+  transform: scale(1.6);
 }
