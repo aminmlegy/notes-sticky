@@ -3,7 +3,6 @@ import uuid from "react-uuid";
 import "./App.css";
 
 const initialState = {
-  lastNoteCreated: null,
   noteCount: 0,
   notes: [],
 };
