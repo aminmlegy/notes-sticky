@@ -1,11 +1,13 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import uuid from "react-uuid";
 import "./App.css";
+
 const initialState = {
   lastNoteCreated: null,
   noteCount: 0,
   notes: [],
 };
+
 const noteReducer = (prevState, action) => {
   switch (action.type) {
     case "ADD_NOTE":
@@ -21,16 +23,20 @@ const noteReducer = (prevState, action) => {
         noteCount: prevState.notes.length - 1,
         notes: prevState.notes.filter((note) => note.id !== action.payload.id),
       };
-      console.log("After DELETE_NOTE: ", newState);
       return newState;
     }
     default:
       console.log("helllo");
   }
 };
+
 export default function App() {
   const [inputData, setInputData] = useState("");
-  const [listNotes, dispatch] = useReducer(noteReducer, initialState);
+  const [listNotes, dispatch] = useReducer(
+    noteReducer,
+    JSON.parse(localStorage.getItem("notesInfo")) || initialState
+  );
+
   const addNote = (e) => {
     e.preventDefault();
     if (!inputData) {
@@ -39,19 +45,26 @@ export default function App() {
     const newNote = {
       id: uuid(),
       text: inputData,
-      rotate: Math.floor(Math.random() * 20),
+      rotate: Math.floor(Math.random() * 30),
     };
     dispatch({ type: "ADD_NOTE", payload: newNote });
     setInputData("");
   };
+
   const dragNote = (e) => {
     e.target.style.left = `${e.pageX - 50}px`;
     e.target.style.top = `${e.pageY - 50}px`;
   };
+
   const dragApp = (e) => {
     e.stopPropagation();
     e.preventDefault();
   };
+
+  useEffect(() => {
+    localStorage.setItem("notesInfo", JSON.stringify(listNotes));
+  }, [listNotes]);
+
   return (
     <div className='app' onDragOver={dragApp}>
       <h1>
@@ -69,7 +82,7 @@ export default function App() {
           placeholder='Create a new note.....'></textarea>
         <button type='submit'>Add</button>
       </form>
-      {listNotes.notes.map((note, index) => {
+      {listNotes.notes.map((note) => {
         return (
           <div
             className='note'
