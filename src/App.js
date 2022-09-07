@@ -12,14 +12,12 @@ const noteReducer = (prevState, action) => {
   switch (action.type) {
     case "ADD_NOTE":
       const newState = {
-        lastNoteCreated: new Date().toTimeString().slice(0, 8),
         noteCount: prevState.notes.length + 1,
         notes: [...prevState.notes, action.payload],
       };
       return newState;
     case "DELETE_NOTE": {
       const newState = {
-        ...prevState,
         noteCount: prevState.notes.length - 1,
         notes: prevState.notes.filter((note) => note.id !== action.payload.id),
       };
@@ -45,6 +43,7 @@ export default function App() {
     const newNote = {
       id: uuid(),
       text: inputData,
+      noteDate: new Date().toTimeString().slice(0, 8),
       rotate: Math.floor(Math.random() * 30),
     };
     dispatch({ type: "ADD_NOTE", payload: newNote });
@@ -71,7 +70,7 @@ export default function App() {
         Sticky Notes ({listNotes.noteCount})
         <span>
           {listNotes.noteCount > 0
-            ? `Last Not Created ${listNotes.lastNoteCreated}`
+            ? `Last Not Created ${listNotes.notes.at(-1).noteDate}`
             : ""}
         </span>
       </h1>
