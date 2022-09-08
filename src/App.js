@@ -3,7 +3,6 @@ import uuid from "react-uuid";
 import "./App.css";
 import Swal from "sweetalert2";
 const initialState = {
-  lastNoteCreated: null,
   noteCount: 0,
   notes: [],
 };
