@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import uuid from "react-uuid";
 import "./App.css";
-
+import Swal from "sweetalert2";
 const initialState = {
   lastNoteCreated: null,
   noteCount: 0,
@@ -63,7 +63,14 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("notesInfo", JSON.stringify(listNotes));
   }, [listNotes]);
-
+  const deleteNote = (note) => {
+    Swal.fire({
+      title: `Are You Want Delete ${note.text}?`,
+      showCancelButton: true,
+    }).then((res) => {
+      res.isConfirmed && dispatch({ type: "DELETE_NOTE", payload: note });
+    });
+  };
   return (
     <div className='app' onDragOver={dragApp}>
       <h1>
@@ -89,9 +96,7 @@ export default function App() {
             draggable='true'
             onDragEnd={dragNote}
             key={note.id}>
-            <div
-              onClick={() => dispatch({ type: "DELETE_NOTE", payload: note })}
-              className='close'>
+            <div onClick={() => deleteNote(note)} className='close'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 viewBox='0 0 20 20'
