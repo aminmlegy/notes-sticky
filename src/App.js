@@ -64,7 +64,7 @@ export default function App() {
   }, [listNotes]);
   const deleteNote = (note) => {
     Swal.fire({
-      title: `Are You Want Delete ${note.text}?`,
+      title: `Are You Sure?`,
       showCancelButton: true,
     }).then((res) => {
       res.isConfirmed && dispatch({ type: "DELETE_NOTE", payload: note });
@@ -91,7 +91,13 @@ export default function App() {
         return (
           <div
             className='note'
-            style={{ transform: `rotate(${note.rotate}deg)` }}
+            style={
+              listNotes.notes.at(-1).id === note.id
+                ? {
+                    transform: `rotate(${note.rotate}deg)`,
+                  }
+                : { transform: `rotate(${note.rotate}deg)` }
+            }
             draggable='true'
             onDragEnd={dragNote}
             key={note.id}>
@@ -107,7 +113,18 @@ export default function App() {
                 />
               </svg>
             </div>
-            <pre className='text'>{note.text}</pre>
+            <pre className='text'>
+              {note.text}
+
+              {listNotes.notes.at(-1).id === note.id ? (
+                <span className='lastNote'>
+                  {" "}
+                  {listNotes.notes.at(-1).noteDate}
+                </span>
+              ) : (
+                ""
+              )}
+            </pre>
           </div>
         );
       })}
