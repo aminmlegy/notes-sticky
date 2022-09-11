@@ -55,6 +55,7 @@ button:hover {
   overflow-x: hidden;
   position: relative;
   padding: 30px 0;
+  word-wrap: break-word;
 }
 .lastNote {
   position: sticky;
@@ -65,6 +66,7 @@ button:hover {
   background-color: tomato;
   padding: 10px;
   border-radius: 4px;
+  background-blend-mode: screen;
 }
 .close {
   width: 15px;
